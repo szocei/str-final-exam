@@ -13,6 +13,8 @@ export class UserListComponent implements OnInit {
 
   users$:BehaviorSubject<User[]>| Observable<User[]> = this.userService.userList$;
 
+   
+
   constructor(
     private userService: UserService,
     private router:Router,
@@ -22,11 +24,30 @@ export class UserListComponent implements OnInit {
 this.userService.getAll()
   }
 
- onRemove(user:User):void {
-    this.userService.remove(user),
-    this.router.navigate(['user'])
-    
+
+columnKey:string='';
+
+onColumnSelect(key:string):void{
+  this.columnKey=key;
+}
+phrase:string='';
+
+onChangePhrase(event:any): void{
+    this.phrase = (event.target as HTMLInputElement).value;
+      
   }
 
+  selectDel: User = new User();
+onRemove(user: User): void {
+    this.selectDel = user;
+  }
+
+  deleteItem(): void {
+    const deletedId: number = this.selectDel.id;
+    this.userService.remove(this.selectDel);
+     this.userService.getAll();
+     this.router.navigate(['user'])
+        
+  }
 
 }

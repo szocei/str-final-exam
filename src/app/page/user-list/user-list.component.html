@@ -1,30 +1,32 @@
 <div class="row">
   <div class="col-12 mt-2">
     <h2>User List</h2>
+    <input class="form-control mr-sm-2" type="text" placeholder="Search" (keyup)="onChangePhrase($event)">
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Address</th>
-          <th>Active</th>
+          <th (click)="onColumnSelect('id')">#</th>
+          <th (click)="onColumnSelect('name')">Name</th>
+          <th (click)="onColumnSelect('email')">Email</th>
+          <th (click)="onColumnSelect('address')">Address</th>
+          <th (click)="onColumnSelect('active')">Active</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users$ | async">
+        <tr *ngFor="let user of users$ | async |filter:'name':phrase  | sorter:columnKey">
           <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.address }}</td>
           <td>{{ user.active }}</td>
           <td>
-            <div class="btn-group">
+            <div class=" btn-group">
               <button [routerLink]="['user/' + user.id]" class="btn btn-info">
                 <i class="fa fa-pencil"></i>
               </button>
-              <button class="btn btn-danger" (click)="onRemove(user)">
+              <button (click)="onRemove(user)" rel="tooltip" title="Remove this Category" data-toggle="modal"
+                data-target="#myModal" class="btn btn-danger">
                 <i class="fa fa-trash"></i>
               </button>
             </div>
@@ -32,5 +34,26 @@
         </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Törlés megerősítése</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Biztos, hogy törölni akarod ezt a usert: {{selectDel.name}}?</p>
+      </div>
+      <div class="modal-footer">
+        <button (click)="deleteItem()" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+      </div>
+    </div>
   </div>
 </div>
